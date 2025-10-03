@@ -1,0 +1,273 @@
+import React, { useState, useRef } from "react";
+
+
+import axios from "axios";
+import {
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Button,
+  Container,
+  Input,
+} from "@mui/material";
+import PageTitle from "../../../components/PageTitle";
+import BASE_URL from "../../../config";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+
+const RegisterEducator = () => {
+  const initialState = {
+    firstname: "",
+    lastname: "",
+    email: "",
+    phone: "",
+    password: "",
+    sameAddress: false,
+    currentAddress: {
+      addressline1: "",
+      addressline2: "",
+      city: "",
+      state: "",
+      country: "",
+      zip: "",
+      landmark: "",
+    },
+    permanentAddress: {
+      addressline1: "",
+      addressline2: "",
+      city: "",
+      state: "",
+      country: "",
+      zip: "",
+      landmark: "",
+    },
+    Bank: {
+      bankname: "",
+      branch: "",
+      accountholder: "",
+      accountnumber: "",
+      ifsc: "",
+    },
+    profile: null,
+    adharimage: null,
+    panimage: null,
+    degree: null,
+  };
+
+  const [formData, setFormData] = useState(initialState);
+  const token = sessionStorage.getItem("token");
+  const profileRef = useRef(null);
+  const adharRef = useRef(null);
+  const panRef = useRef(null);
+  const degreeRef = useRef(null);
+
+  const navigate=useNavigate();
+  const handleChange = (e) => {
+    const { name, value, checked, type, files } = e.target;
+
+    if (type === "checkbox") {
+      setFormData((prevData) => ({
+        ...prevData,
+        sameAddress: checked,
+        permanentAddress: checked
+          ? { ...prevData.currentAddress }
+          : prevData.permanentAddress,
+      }));
+    } else if (type === "file") {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: files[0],
+      }));
+    } else if (name.includes(".")) {
+      const [parent, child] = name.split(".");
+      setFormData((prevData) => ({
+        ...prevData,
+        [parent]: {
+          ...prevData[parent],
+          [child]: value,
+        },
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+
+  const addMentorAPI = async () => {
+    try {
+      const url = `${BASE_URL}/admin/registereducator`;
+      const formDataToSend = new FormData();
+
+      // Append all form fields
+      Object.keys(formData).forEach((key) => {
+        if (["profile", "adharimage", "panimage", "degree"].includes(key)) {
+          if (formData[key]) {
+            formDataToSend.append(key, formData[key]);
+          }
+        } else if (typeof formData[key] === "object") {
+          Object.keys(formData[key]).forEach((nestedKey) => {
+            formDataToSend.append(
+              `${key}.${nestedKey}`,
+              formData[key][nestedKey]
+            );
+          });
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+
+      const headers = {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+     const response= await axios.post(url, formDataToSend, { headers });
+
+      setFormData(initialState);
+      if (profileRef.current) profileRef.current.value = "";
+      if (adharRef.current) adharRef.current.value = "";
+      if (panRef.current) panRef.current.value = "";
+      if (degreeRef.current) degreeRef.current.value = "";
+      // console.log("Mentor registered successfully",response.data);
+      if(response.data.error==false){
+        Swal.fire({
+            title: "Good job!",
+            text: "You clicked the button!",
+            icon: "success"
+          }).then(()=>{
+            navigate('/educator-list-mentor')
+          });
+      }
+    } catch (error) {
+      // console.error(
+      //   "Error adding mentor:",
+      //   error.response?.data || error.message
+      // );
+    }
+  };
+
+  return (
+    <>
+      <PageTitle page="Add Educator" />
+      <Container>
+        <Grid container spacing={3}>
+          {["firstname", "lastname", "email", "phone", "password"].map(
+            (field) => (
+              <Grid item xs={12} sm={4} key={field}>
+                <TextField
+                  fullWidth
+                  label={field.replace(/^\w/, (c) => c.toUpperCase())}
+                  name={field}
+                  type={field === "password" ? "password" : "text"}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+            )
+          )}
+
+          {/* Current Address Heading */}
+          <Grid item xs={12}>
+            <h2>Current Address</h2>
+          </Grid>
+
+          {/* Current Address Fields */}
+          {Object.keys(formData.currentAddress).map((field) => (
+            <Grid item xs={12} sm={4} key={`currentAddress.${field}`}>
+              <TextField
+                fullWidth
+                label={field.replace(/^\w/, (c) => c.toUpperCase())}
+                name={`currentAddress.${field}`}
+                value={formData.currentAddress[field]}
+                onChange={handleChange}
+              />
+            </Grid>
+          ))}
+
+          {/* Same Address Checkbox */}
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="sameAddress"
+                  checked={formData.sameAddress}
+                  onChange={handleChange}
+                />
+              }
+              label="Permanent Address same as Current Address"
+            />
+          </Grid>
+
+          {/* Permanent Address Heading */}
+          {!formData.sameAddress && (
+            <Grid item xs={12}>
+              <h2>Permanent Address</h2>
+            </Grid>
+          )}
+
+          {/* Permanent Address Fields */}
+          {!formData.sameAddress &&
+            Object.keys(formData.permanentAddress).map((field) => (
+              <Grid item xs={12} sm={4} key={`permanentAddress.${field}`}>
+                <TextField
+                  fullWidth
+                  label={field.replace(/^\w/, (c) => c.toUpperCase())}
+                  name={`permanentAddress.${field}`}
+                  value={formData.permanentAddress[field]}
+                  onChange={handleChange}
+                />
+              </Grid>
+            ))}
+
+          {/* Bank Details */}
+          {Object.keys(formData.Bank).map((field) => (
+            <Grid item xs={12} sm={4} key={field}>
+              <TextField
+                fullWidth
+                label={field.replace(/^\w/, (c) => c.toUpperCase())}
+                name={`Bank.${field}`}
+                value={formData.Bank[field]}
+                onChange={handleChange}
+              />
+            </Grid>
+          ))}
+
+          {/* File Uploads */}
+          {["profile", "adharimage", "panimage", "degree"].map((fileField) => (
+            <Grid item xs={12} sm={4} key={fileField}>
+              <Input
+                type="file"
+                name={fileField}
+                onChange={handleChange}
+                inputProps={{ accept: "image/*" }}
+              />
+              <label style={{ marginTop: "8px", display: "block" }}>
+                {fileField === "profile"
+                  ? "Profile Picture"
+                  : fileField === "adharimage"
+                  ? "Aadhar Image"
+                  : fileField === "panimage"
+                  ? "PAN Image"
+                  : "Degree Certificate"}
+              </label>
+            </Grid>
+          ))}
+
+          {/* Submit Button */}
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" onClick={addMentorAPI}>
+              Register Mentor
+            </Button>
+          </Grid>
+        </Grid>
+      </Container>
+    </>
+  );
+};
+
+export default RegisterEducator;

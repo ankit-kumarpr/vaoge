@@ -1,0 +1,41 @@
+.footer {
+    background-color: #947c7c;
+    color: #fff;
+    padding: 58px 0;
+}
+.footer h5 {
+    font-family: 'Poppins', Arial, Helvetica, 'Nimbus Sans L', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 300;
+    font-style: normal;
+    text-transform: none;
+}
+.footer h5::after {
+    content: "";
+    display: block;
+    width: 100px;
+    height: 2px;
+    background-color: #01a2a6;
+    margin-top: 5px;
+}
+.footer p, .footer a {
+    color: #fff;
+    font-size: 12px;
+    text-decoration: none;
+}
+.footer a:hover {
+    color: #fff;
+}
+.footer ul {
+    list-style: none;
+    padding: 0;
+}
+.footer ul li {
+    margin-bottom: 8px;
+    /* list-style: disc; */
+}
+.footer-icons {
+    margin-right: 8px;
+    color: #fff;
+}

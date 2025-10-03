@@ -1,0 +1,10 @@
+#Education web application API Documentation 
+
+Roles -
+1. Admin /Mentor
+2. Educator
+3. Student 
+
+
+Admin/Mentor Register= 
+    (firstname,lastname,email,password,)

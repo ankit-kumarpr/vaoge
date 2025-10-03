@@ -1,0 +1,84 @@
+/* Date filter section */
+.date-filter {
+    margin: 20px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+  }
+  
+  /* Container for all cards */
+  .class-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto; /* Center the container */
+  }
+  
+  /* Individual class card */
+  .class-card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative; /* For positioning the button */
+  }
+  
+  .class-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  
+  .change-request-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff9800;
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 1rem; 
+    border-radius: 5px;
+    text-transform: none;
+    height: 40px; 
+    display: flex;
+    align-items: center;
+  }
+  
+  .change-request-button:hover {
+    background-color: #f57c00;
+  }
+  
+  /* Class name and button container */
+  .class-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .change-schedule-button:hover {
+    background-color: #f57c00;
+  }
+  
+  /* Modal styling */
+  .modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* No classes message */
+  .no-classes-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 20px;
+  }

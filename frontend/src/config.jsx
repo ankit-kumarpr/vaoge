@@ -1,3 +1,3 @@
-const BASE_URL = "http://localhost:4500/api"; 
+const BASE_URL = "https://vaoge.onrender.com/api"; 
 
 export default BASE_URL;

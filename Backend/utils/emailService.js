@@ -5,14 +5,14 @@ const transporter = nodemailer.createTransport({
     
     service: "gmail",
     auth: {
-        user: "rajdevchauhan1074@gmail.com",
-        pass: "sshb xrvd rnqf ruqy"
+        user: "akprajapati18800@gmail.com",
+        pass: "cpfm cwoh hazp fcjo"
     }
 });
 
 const sendOTPEmail = async (email, otp) => {
     const mailOptions = {
-        from: "rajdevchauhan1074@gmail.com",
+        from: "akprajapati18800@gmail.com",
         to: email,
         subject: "Your OTP Code",
         text: `Your OTP code is: ${otp}. It will expire in 10 minutes.`

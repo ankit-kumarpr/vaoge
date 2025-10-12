@@ -140,8 +140,10 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    console.log("Email and passsword in login is ",email, password);
+    console.log("Email and passsword in login is ", password);
     const userResponse = await findUserByEmail(email);
-
+console.log("user response",userResponse);
     if (!userResponse) {
       return res.status(400).json({ error: true, message: "User not found" });
     }
